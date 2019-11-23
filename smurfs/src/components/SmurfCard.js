@@ -13,9 +13,11 @@ const SmurfCard = props => {
             name="easyLevel"
             type="checkbox"
             checked={props.editing}
-            onChange={props.checkChangeHandler}
+            // onChange={(e) => {props.checkChangeHandler(e, props.smurf)}}
+            onChange={() => props.editSmurfButton(props.smurf)}
         >
         </input>
+        {/* <button onClick={() => props.editSmurfButton(props.smurf)}>Edit</button> */}
     </div>
   );
 };

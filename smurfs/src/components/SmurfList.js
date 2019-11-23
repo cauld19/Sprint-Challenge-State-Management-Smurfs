@@ -14,9 +14,15 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
 
   const [editing, setEditing] = useState(false)
 
-//   const [editSmurf, setEditSmurf] = useState({name: "", age: "", height: ""})
 
-
+  const editSmurfButton = smurf => {
+    setEditing(!editing)
+    if(!editing){
+        setPostSmurf({ id: smurf.id, name: smurf.name, height: smurf.height, age: smurf.age  })
+    } else {
+        setPostSmurf({ id: "", name: "", height: "", age: "" })
+    }
+  }
 
   const changeHandle = e => {
       setPostSmurf({
@@ -34,40 +40,46 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
         })
   }
 
-  const editHandle = smurf => {
+
+
+  const checkChangeHandler = evt => {
+    let checked = evt.target.checked;
+    setEditing(checked);
+    }
+
+  const submitHandle = e => {
       if(editing){
-        setPostSmurf({name: smurf.name, age: smurf.age, height: smurf.height, id: smurf.id})
-      }
-        const editSmurf = {
+        e.preventDefault();
+        let editSmurf = {
             name: postSmurf.name,
             age: postSmurf.age,
             height: postSmurf.height,
             id: postSmurf.id
         }
-        axios.put(`http://localhost:3333/smurfs/${editSmurf.id}`, smurf)
-        .then(res => console.log(res.data));
-  }
-
-  const checkChangeHandler = evt => {
-    let checked = evt.target.checked;
-    setEditing(checked)
-}
-
-  const submitHandle = e => {
-    e.preventDefault();
-    let newSmurf = {
-      name: postSmurf.name,
-      age: postSmurf.age,
-      height: postSmurf.height,
-      id: Date.now()
-    };
-    axios
-      .post("http://localhost:3333/smurfs", newSmurf)
-        .then(fetchSmurfs())
-      .catch(err => {
-        console.log(err);
-      });
+        axios
+            .put(`http://localhost:3333/smurfs/${editSmurf.id}`, editSmurf)
+                .then(fetchSmurfs())
+                .catch(err => {
+                    console.log(err);
+                });
+      } else {
+        e.preventDefault();
+        let newSmurf = {
+            name: postSmurf.name,
+            age: postSmurf.age,
+            height: postSmurf.height,
+            id: Date.now()
+        };
+        axios
+            .post("http://localhost:3333/smurfs", newSmurf)
+                .then(fetchSmurfs())
+                .catch(err => {
+                    console.log(err);
+                });
+            }
   };
+
+console.log(editing)
 
   return (
     <div>
@@ -100,7 +112,7 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
 
       <div>
         {props.smurfs.map(smurf => (
-          <SmurfCard key={smurf.id} smurf={smurf} deleteHandle={deleteHandle} setEditing={setEditing} checkChangeHandler={checkChangeHandler} editHandle={editHandle}/>
+          <SmurfCard key={smurf.id} smurf={smurf} deleteHandle={deleteHandle} setEditing={setEditing} checkChangeHandler={checkChangeHandler} editSmurfButton={editSmurfButton}/>
         ))}
       </div>
     </div>
