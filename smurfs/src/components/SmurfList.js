@@ -12,6 +12,10 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
 
   const [postSmurf, setPostSmurf] = useState({name: "", age: "", height: ""})
 
+  const [editing, setEditing] = useState(false)
+
+//   const [editSmurf, setEditSmurf] = useState({name: "", age: "", height: ""})
+
 
 
   const changeHandle = e => {
@@ -28,8 +32,26 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
             console.log(res.data);
             fetchSmurfs()
         })
-
   }
+
+  const editHandle = smurf => {
+      if(editing){
+        setPostSmurf({name: smurf.name, age: smurf.age, height: smurf.height, id: smurf.id})
+      }
+        const editSmurf = {
+            name: postSmurf.name,
+            age: postSmurf.age,
+            height: postSmurf.height,
+            id: postSmurf.id
+        }
+        axios.put(`http://localhost:3333/smurfs/${editSmurf.id}`, smurf)
+        .then(res => console.log(res.data));
+  }
+
+  const checkChangeHandler = evt => {
+    let checked = evt.target.checked;
+    setEditing(checked)
+}
 
   const submitHandle = e => {
     e.preventDefault();
@@ -72,12 +94,13 @@ const Smurfs = ({ fetchSmurfs, ...props }) => {
           onChange={changeHandle}
         />
         <button>Add</button>
+
       </form>
 
 
       <div>
         {props.smurfs.map(smurf => (
-          <SmurfCard key={smurf.id} smurf={smurf} deleteHandle={deleteHandle}/>
+          <SmurfCard key={smurf.id} smurf={smurf} deleteHandle={deleteHandle} setEditing={setEditing} checkChangeHandler={checkChangeHandler} editHandle={editHandle}/>
         ))}
       </div>
     </div>
