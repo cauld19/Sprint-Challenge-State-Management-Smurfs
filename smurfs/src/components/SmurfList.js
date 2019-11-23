@@ -164,14 +164,8 @@ let editSmurf = {
 const mapStateToProps = state => {
   return {
     isLoading: state.isLoading,
-    smurfs: state.smurfs.map(smurf => {
-      return {
-        name: smurf.name,
-        age: smurf.age,
-        height: smurf.height,
-        id: smurf.id
-      };
-    })
+    smurfs: state.smurfs,
+    error: state.error
   };
 };
 

@@ -83,7 +83,7 @@ const reducer = (state = initialState, action) => {
         case SMURF_DELETE_START:
                 return{
                     ...state,
-                    isLoading: true,
+                    isLoading: true, 
                     error: '',
                 };
         case SMURF_DELETE_SUCCESS: 
