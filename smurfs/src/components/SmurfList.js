@@ -158,8 +158,8 @@ let editSmurf = {
       <div>
         {smurfs.map(smurf => (
           <SmurfCard 
-            key={smurfs.id}
-            smurf={smurfs} 
+            key={smurf.id}
+            smurf={smurf} 
             deleteHandle={deleteHandle} 
             setEditing={setEditing} 
             checkChangeHandler={checkChangeHandler} 
