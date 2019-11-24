@@ -21,7 +21,8 @@ const initialState = {
         name: "",
         age: "",
         height: "",
-        id: ""
+        id: "",
+        select: false
       }
     ]
   };
@@ -44,7 +45,8 @@ const reducer = (state = initialState, action) => {
                       name: smurf.name,
                       age: smurf.age,
                       height: smurf.height,
-                      id: smurf.id
+                      id: smurf.id,
+                      select: false
                     };
                   })
             };
@@ -70,7 +72,8 @@ const reducer = (state = initialState, action) => {
                       name: smurf.name,
                       age: smurf.age,
                       height: smurf.height,
-                      id: smurf.id
+                      id: smurf.id,
+                      select: false
                     };
                   })
             };
@@ -96,7 +99,8 @@ const reducer = (state = initialState, action) => {
                         name: smurf.name,
                         age: smurf.age,
                         height: smurf.height,
-                        id: smurf.id
+                        id: smurf.id,
+                        select: false
                     };
                     })
             };
@@ -122,7 +126,8 @@ const reducer = (state = initialState, action) => {
                         name: smurf.name,
                         age: smurf.age,
                         height: smurf.height,
-                        id: smurf.id
+                        id: smurf.id,
+                        select: false
                     };
                     })
             };

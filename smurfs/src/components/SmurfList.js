@@ -7,6 +7,7 @@ import { fetchSmurfs, addSmurf, deleteSmurf, modifySmurf } from "../actions";
 import { shallowEqual, useSelector, useDispatch  } from 'react-redux';
 
 import SmurfCard from "./SmurfCard";
+import Form from "./Form"
 
 const SmurfList = props => {
   useEffect(() => {
@@ -19,17 +20,20 @@ const SmurfList = props => {
     const error = useSelector(state => state.error);
     const smurfs = useSelector(state => state.smurfs);
 
-  const [initialSmurfState] = useState({ id: "", name: "", height: "", age: "" })
+  const [initialSmurfState] = useState({ id: "", name: "", height: "", age: "", select: false })
 
-  const [postSmurf, setPostSmurf] = useState({name: "", age: "", height: ""})
+  const [postSmurf, setPostSmurf] = useState({name: "", age: "", height: "", id: "", select: false})
 
   const [editing, setEditing] = useState(false)
 
 
+
+
+
   const editChangeHandle = smurf => {
-    setEditing(!editing)
+    setEditing(!editing);
     if(!editing){
-        setPostSmurf({ id: smurf.id, name: smurf.name, height: smurf.height, age: smurf.age  })
+        setPostSmurf({ id: smurf.id, name: smurf.name, height: smurf.height, age: smurf.age, select: false  })
     } else {
         setPostSmurf(initialSmurfState)
     }
@@ -42,10 +46,7 @@ const SmurfList = props => {
       })
   };
 
-  const checkChangeHandler = evt => {
-    let checked = evt.target.checked;
-    setEditing(checked);
-}
+
 
 
   const deleteHandle = id => {
@@ -72,6 +73,7 @@ let editSmurf = {
         e.preventDefault();
         dispatch(modifySmurf(editSmurf))
         setPostSmurf(initialSmurfState)
+        // setEditing(!editing)
     } else {
         e.preventDefault();
         dispatch(addSmurf(newSmurf))
@@ -125,10 +127,10 @@ let editSmurf = {
 //             fetchSmurfs()
 //         })
 //   }
-
+  console.log(postSmurf.id)
   return (
     <div>
-      <form onSubmit={submitHandle}>
+      {/* <form onSubmit={submitHandle}>
         <input
           type="text"
           name="name"
@@ -152,18 +154,26 @@ let editSmurf = {
         />
         <button>Add/Update</button>
 
-      </form>
+      </form> */}
 
-
+      <Form 
+        submitHandle={submitHandle}
+        changeHandle={changeHandle}
+        postSmurf={postSmurf}
+        
+      />
       <div>
         {smurfs.map(smurf => (
           <SmurfCard 
             key={smurf.id}
             smurf={smurf} 
+            postSmurf={postSmurf}
             deleteHandle={deleteHandle} 
             setEditing={setEditing} 
-            checkChangeHandler={checkChangeHandler} 
-            editChangeHandle={editChangeHandle}/>
+            // checkChangeHandler={checkChangeHandler} 
+            editChangeHandle={editChangeHandle}
+            editing={editing}
+          />
         ))}
       </div>
     </div>

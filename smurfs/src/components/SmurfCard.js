@@ -2,7 +2,9 @@ import React from "react";
 
 const SmurfCard = props => {
 
-  
+  console.log(props.postSmurf.select)
+
+
   return (
     <div>
       <h2>{props.smurf.name}</h2>
@@ -12,7 +14,7 @@ const SmurfCard = props => {
       <input
             name="easyLevel"
             type="checkbox"
-            checked={props.editing}
+            checked={null}
             onChange={() => props.editChangeHandle(props.smurf)}
         >
         </input>
