@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { fetchSmurfs, addSmurf, deleteSmurf, modifySmurf } from "../actions";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 // import axios from "axios";
+
+
+import { shallowEqual, useSelector, useDispatch  } from 'react-redux';
 
 import SmurfCard from "./SmurfCard";
 
-const Smurfs = props => {
+const SmurfList = props => {
   useEffect(() => {
-    props.fetchSmurfs();
+    dispatch(fetchSmurfs());
   }, [fetchSmurfs]);
+
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector(state => state.isLoading);
+    const error = useSelector(state => state.error);
+    const smurfs = useSelector(state => state.smurfs);
 
   const [initialSmurfState] = useState({ id: "", name: "", height: "", age: "" })
 
@@ -40,7 +49,7 @@ const Smurfs = props => {
 
 
   const deleteHandle = id => {
-      props.deleteSmurf(id)
+      dispatch(deleteSmurf(id))
       setPostSmurf(initialSmurfState)
   }
 
@@ -61,11 +70,11 @@ let editSmurf = {
   const submitHandle = e => {
     if (editing) {
         e.preventDefault();
-        props.modifySmurf(editSmurf)
+        dispatch(modifySmurf(editSmurf))
         setPostSmurf(initialSmurfState)
     } else {
         e.preventDefault();
-        props.addSmurf(newSmurf)
+        dispatch(addSmurf(newSmurf))
         setPostSmurf(initialSmurfState)
     }
   }
@@ -147,10 +156,10 @@ let editSmurf = {
 
 
       <div>
-        {props.smurfs.map(smurf => (
+        {smurfs.map(smurf => (
           <SmurfCard 
-            key={smurf.id}
-            smurf={smurf} 
+            key={smurfs.id}
+            smurf={smurfs} 
             deleteHandle={deleteHandle} 
             setEditing={setEditing} 
             checkChangeHandler={checkChangeHandler} 
@@ -161,12 +170,14 @@ let editSmurf = {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    isLoading: state.isLoading,
-    smurfs: state.smurfs,
-    error: state.error
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     isLoading: state.isLoading,
+//     smurfs: state.smurfs,
+//     error: state.error
+//   };
+// };
 
-export default connect(mapStateToProps,{ fetchSmurfs, addSmurf, deleteSmurf, modifySmurf })(Smurfs);
+export default SmurfList
+
+// export default connect(mapStateToProps,{ fetchSmurfs, addSmurf, deleteSmurf, modifySmurf })(SmurfList);
