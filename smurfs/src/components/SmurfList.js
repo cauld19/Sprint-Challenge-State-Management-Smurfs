@@ -1,0 +1,193 @@
+import React, { useState, useEffect } from "react";
+import { fetchSmurfs, addSmurf, deleteSmurf, modifySmurf } from "../actions";
+// import { connect } from "react-redux";
+// import axios from "axios";
+
+
+import { shallowEqual, useSelector, useDispatch  } from 'react-redux';
+
+import SmurfCard from "./SmurfCard";
+import Form from "./Form"
+
+const SmurfList = props => {
+  useEffect(() => {
+    dispatch(fetchSmurfs());
+  }, [fetchSmurfs]);
+
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector(state => state.isLoading);
+    const error = useSelector(state => state.error);
+    const smurfs = useSelector(state => state.smurfs);
+
+  const [initialSmurfState] = useState({ id: "", name: "", height: "", age: "", select: false })
+
+  const [postSmurf, setPostSmurf] = useState({name: "", age: "", height: "", id: "", select: false})
+
+  const [editing, setEditing] = useState(false)
+
+
+
+
+
+  const editChangeHandle = smurf => {
+    setEditing(!editing);
+    if(!editing){
+        setPostSmurf({ id: smurf.id, name: smurf.name, height: smurf.height, age: smurf.age, select: false  })
+    } else {
+        setPostSmurf(initialSmurfState)
+    }
+  }
+
+  const changeHandle = e => {
+      setPostSmurf({
+          ...postSmurf,
+          [e.target.name]: e.target.value
+      })
+  };
+
+
+
+
+  const deleteHandle = id => {
+      dispatch(deleteSmurf(id))
+      setPostSmurf(initialSmurfState)
+  }
+
+let newSmurf = {
+    name: postSmurf.name,
+    age: postSmurf.age,
+    height: postSmurf.height,
+    id: Date.now()
+};
+
+let editSmurf = {
+    name: postSmurf.name,
+    age: postSmurf.age,
+    height: postSmurf.height,
+    id: postSmurf.id
+};
+
+  const submitHandle = e => {
+    if (editing) {
+        e.preventDefault();
+        dispatch(modifySmurf(editSmurf))
+        setPostSmurf(initialSmurfState)
+        // setEditing(!editing)
+    } else {
+        e.preventDefault();
+        dispatch(addSmurf(newSmurf))
+        setPostSmurf(initialSmurfState)
+    }
+  }
+
+ 
+
+//   const submitHandle = e => {
+//       if(editing){
+//         e.preventDefault();
+//         let editSmurf = {
+//             name: postSmurf.name,
+//             age: postSmurf.age,
+//             height: postSmurf.height,
+//             id: postSmurf.id
+//         }
+//         axios
+//             .put(`http://localhost:3333/smurfs/${editSmurf.id}`, editSmurf)
+//                 .then(res => {
+//                     console.log(res.data);
+//                     fetchSmurfs()
+//                 })
+//                 .catch(err => {
+//                     console.log(err);
+//                 });
+//       } else {
+//         e.preventDefault();
+//         let newSmurf = {
+//             name: postSmurf.name,
+//             age: postSmurf.age,
+//             height: postSmurf.height,
+//             id: Date.now()
+//         };
+//         axios
+//             .post("http://localhost:3333/smurfs", newSmurf)
+//                 .then(fetchSmurfs())
+//                 .catch(err => {
+//                     console.log(err);
+//                 });
+//             }
+//   };
+
+//   const deleteHandle = id => {
+//         setPostSmurf({ id: "", name: "", height: "", age: "" })
+//       axios.delete(`http://localhost:3333/smurfs/${id}`)
+//         // .then(res => {console.log(res.data)),
+//         .then(res => {
+//             console.log(res.data);
+//             fetchSmurfs()
+//         })
+//   }
+  console.log(postSmurf.id)
+  return (
+    <div>
+      {/* <form onSubmit={submitHandle}>
+        <input
+          type="text"
+          name="name"
+          placeholder="name"
+          value={postSmurf.name}
+          onChange={changeHandle}
+        />
+        <input
+          type="number"
+          name="age"
+          placeholder="age"
+          value={postSmurf.age}
+          onChange={changeHandle}
+        />
+        <input
+          type="text"
+          name="height"
+          placeholder="height"
+          value={postSmurf.height}
+          onChange={changeHandle}
+        />
+        <button>Add/Update</button>
+
+      </form> */}
+
+      <Form 
+        submitHandle={submitHandle}
+        changeHandle={changeHandle}
+        postSmurf={postSmurf}
+        
+      />
+      <div>
+        {smurfs.map(smurf => (
+          <SmurfCard 
+            key={smurf.id}
+            smurf={smurf} 
+            postSmurf={postSmurf}
+            deleteHandle={deleteHandle} 
+            setEditing={setEditing} 
+            // checkChangeHandler={checkChangeHandler} 
+            editChangeHandle={editChangeHandle}
+            editing={editing}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// const mapStateToProps = state => {
+//   return {
+//     isLoading: state.isLoading,
+//     smurfs: state.smurfs,
+//     error: state.error
+//   };
+// };
+
+export default SmurfList
+
+// export default connect(mapStateToProps,{ fetchSmurfs, addSmurf, deleteSmurf, modifySmurf })(SmurfList);
